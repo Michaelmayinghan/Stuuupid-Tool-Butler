@@ -1,0 +1,9 @@
+*.asv
+*.m~
+*.autosave
+slprj/
+codegen/
+*.mex*
+*.prj.user
+.DS_Store
+Thumbs.db
