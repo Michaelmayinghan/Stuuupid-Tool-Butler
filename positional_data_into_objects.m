@@ -11,7 +11,7 @@
 clear; clc;
 
 % Load
-matPath = "C:\\Users\\rohan\\OneDrive\\Desktop\\UCL Projects\\Year 1 DSA project 1\\DSAWalkingAroundTheUCLTree.mat";
+matPath = "DSAWalkingAroundTheUCLTree.mat";
 S = load(matPath);
 assert(isfield(S,"Position"), "MAT file does not contain variable 'Position'.");
 P = S.Position;
