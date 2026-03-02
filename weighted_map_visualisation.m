@@ -1,6 +1,6 @@
 clc; clear;
 
-data = load("C:\Users\rohan\OneDrive\Desktop\UCL Projects\Year 1 DSA project 1\DSAWalkingAroundTheUCLTree.mat");
+data = load("DSAWalkingAroundTheUCLTree.mat");
 
 pos_x = data.Position.latitude;
 pos_y = data.Position.longitude;
