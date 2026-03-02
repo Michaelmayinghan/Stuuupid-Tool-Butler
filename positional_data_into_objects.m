@@ -157,7 +157,7 @@ for i = 1:numSeg
     end
 end
 
-%% Optional: digraph (weighted by distance)
+
 nodeNames = string(Nodes.TimestampStart);
 s = (1:numSeg)';
 tIdx = [2:numSeg 1]'; % chain + loop
@@ -234,4 +234,5 @@ function b = bearingDeg(lat1, lon1, lat2, lon2)
     y = sin(dl).*cos(phi2);
     x = cos(phi1).*sin(phi2) - sin(phi1).*cos(phi2).*cos(dl);
     b = mod(rad2deg(atan2(y,x)) + 360, 360);
+
 end
