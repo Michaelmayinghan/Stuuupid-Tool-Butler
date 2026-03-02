@@ -7,7 +7,7 @@ pos_y = data.Position.longitude;
 
 coords = [pos_x(:), pos_y(:)];
 
-% -------- 1) Build grid edges + occupancy map FIRST --------
+% -------- 1) Build grid edges + occupancy map first --------
 res = 0.0001; 
 latEdges = (min(coords(:,1)) - res) : res : (max(coords(:,1)) + res);
 lonEdges = (min(coords(:,2)) - res) : res : (max(coords(:,2)) + res);
@@ -107,4 +107,5 @@ disp(coords(1:min(10,size(coords,1)), :));
 fprintf('Total points in map (sum of counts): %d\n', sum(map(:)));
 fprintf('Map max cell count: %d\n', max(map(:)));
 fprintf('Map min cell count: %d\n', min(map(:)));
+
 fprintf('Map mean cell count: %.3f\n', mean(map(:)));
