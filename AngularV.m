@@ -91,3 +91,13 @@ disp(result);
 figure(1)
 plot(lon, lat, 'ro', 'MarkerSize', 10, 'MarkerFaceColor', 'r');
 legend('Track','4 negative-spin events');
+
+
+
+
+
+
+
+
+
+
