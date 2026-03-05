@@ -1,3 +1,21 @@
+%% Notes
+
+Dynamic environments!!
+
+Real environments change.
+    pedestrians
+    temporary barriers
+    traffic
+
+Robot must:
+    update graph, recompute path
+
+Example:
+    edge removed → recompute Dijkstra
+
+
+
+%% 
 close all
 clc
 
