@@ -1,4 +1,4 @@
-clc; close
+clc;
 data = load('DSAWalkingAroundTheUCLTree.mat');
 data2 = load('firsttry.mat');
 geobasemap streets
