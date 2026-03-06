@@ -1,45 +1,53 @@
+%% Clear workspace
 close all
 clc
+clear
 
-%% ===================== FIGURE 1: GPS track =====================
+%% Load data
+load("sensorlog_20260302_124459Mila.mat");
+
+%% ===================== FIGURE 1: GPS Track =====================
 figure(1)
-plot(Position.longitude, Position.latitude, 'b');
-hold on; grid on
-xlabel('Longitude'); ylabel('Latitude');
-title('GPS Track (with 4 negative-spin events)');
 
-%% ===================== FIGURE 2: Angular velocity Z only =====================
+% Plot GPS track
+geoplot(Position.latitude, Position.longitude, 'b', 'LineWidth', 1.5)
+hold on
+geobasemap("streets")
+title('GPS Track (with 4 negative-spin events)')
+
+%% ===================== FIGURE 2: Angular Velocity (Z) =====================
 t_all = datetime(AngularVelocity.Timestamp);
 
 figure(2)
-% plot(t_all, AngularVelocity.X, 'b'); hold on
-% plot(t_all, AngularVelocity.Y, 'g');
-plot(t_all, AngularVelocity.Z, 'r'); hold on
+plot(t_all, AngularVelocity.Z, 'r', 'LineWidth', 1)
+hold on
 grid on
-xlabel('Time'); ylabel('Angular velocity');
-title('Angular Velocity (Z)');
-legend('Z');
 
-%% ===================== Detect 4 major negative spikes in Z =====================
+xlabel('Time')
+ylabel('Angular velocity Z')
+title('Angular Velocity (Z)')
+legend('Z')
+
+%% ===================== Prepare Angular Velocity Data =====================
 t = datetime(AngularVelocity.Timestamp);
 w = AngularVelocity.Z;
 
+% Remove invalid samples
 valid = ~isnan(w) & ~isnat(t);
 t = t(valid);
 w = w(valid);
 
-% 1) sort by most negative values
+%% ===================== Detect 4 Largest Negative Spins =====================
 [~, sortedIdx] = sort(w, 'ascend');
 
-% 2) pick 4 separated indices
 selectedIdx = [];
-minSeparation = 200;  % adjust if needed
+minSeparation = 200;
 
 for i = 1:length(sortedIdx)
-    cand = sortedIdx(i);
+    candidate = sortedIdx(i);
 
-    if isempty(selectedIdx) || all(abs(cand - selectedIdx) > minSeparation)
-        selectedIdx(end+1) = cand; %#ok<AGROW>
+    if isempty(selectedIdx) || all(abs(candidate - selectedIdx) > minSeparation)
+        selectedIdx(end+1) = candidate; %#ok<AGROW>
     end
 
     if numel(selectedIdx) == 4
@@ -47,18 +55,20 @@ for i = 1:length(sortedIdx)
     end
 end
 
-% sort by time
 selectedIdx = sort(selectedIdx);
 
 eventTimes  = t(selectedIdx);
 eventValues = w(selectedIdx);
 
-% Mark the 4 points on Z plot
+%% ===================== Mark Events on Angular Velocity Plot =====================
 figure(2)
-plot(eventTimes, eventValues, 'ko', 'MarkerFaceColor','k', 'MarkerSize', 8);
-legend('Z','4 negative spikes');
+plot(eventTimes, eventValues, 'ko', ...
+    'MarkerSize', 8, ...
+    'MarkerFaceColor', 'w')
 
-%% ===================== Match each spike to nearest GPS sample =====================
+legend('Z','4 negative-spin events')
+
+%% ===================== Match Events to GPS Samples =====================
 tPos = datetime(Position.Timestamp);
 
 lat = zeros(4,1);
@@ -67,17 +77,29 @@ posIdx = zeros(4,1);
 
 for k = 1:4
     [~, idxClosest] = min(abs(tPos - eventTimes(k)));
+
     posIdx(k) = idxClosest;
     lat(k) = Position.latitude(idxClosest);
     lon(k) = Position.longitude(idxClosest);
 end
 
-result = table(selectedIdx(:), eventTimes(:), eventValues(:), posIdx(:), lat(:), lon(:), ...
+%% ===================== Display Results =====================
+result = table( ...
+    selectedIdx(:), ...
+    eventTimes(:), ...
+    eventValues(:), ...
+    posIdx(:), ...
+    lat(:), ...
+    lon(:), ...
     'VariableNames', {'AV_Index','AV_Time','OmegaZ','GPS_Index','Latitude','Longitude'});
 
-disp(result);
+disp("Detected spin events:")
+disp(result)
 
-%% ===================== Mark the 4 points on GPS plot =====================
+%% ===================== Mark Events on GPS Map =====================
 figure(1)
-plot(lon, lat, 'ro', 'MarkerSize', 10, 'MarkerFaceColor', 'r');
-legend('Track','4 negative-spin events');
+geoplot(lat, lon, 'ro', ...
+    'MarkerSize', 10, ...
+    'MarkerFaceColor', 'r')
+
+legend('Track','4 negative-spin events')
