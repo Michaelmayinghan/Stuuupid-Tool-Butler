@@ -1,39 +1,42 @@
 %% Notes
 
-Dynamic environments!!
-
-Real environments change.
-    pedestrians
-    temporary barriers
-    traffic
-
-Robot must:
-    update graph, recompute path
-
-Example:
-    edge removed → recompute Dijkstra
-
-
+% Dynamic environments!!
+% 
+% Real environments change.
+%     pedestrians
+%     temporary barriers
+%     traffic
+% 
+% Robot must:
+%     update graph, recompute path
+% 
+% Example:
+%     edge removed → recompute Dijkstra
+% 
 
 %% 
-%% Clear workspace
+
+% Clear workspace
 close all
 clc
 clear
 
-%% Load data
-load("sensorlog_20260302_124459Mila.mat");
+% Load data
+% load("sensorlog_20260302_124459Mila.mat");
+load("newMapReadings.mat");
 
-%% ===================== FIGURE 1: GPS Track =====================
-figure(1)
+% FIGURE 1: GPS Track
 
 % Plot GPS track
 geoplot(Position.latitude, Position.longitude, 'b', 'LineWidth', 1.5)
 hold on
 geobasemap("streets")
-title('GPS Track (with 4 negative-spin events)')
+title('GPS Track (with 23 negative-spin events)')
 
-%% ===================== FIGURE 2: Angular Velocity (Z) =====================
+
+
+
+% FIGURE 2: Angular Velocity (Z)
 t_all = datetime(AngularVelocity.Timestamp);
 
 figure(2)
@@ -46,7 +49,9 @@ ylabel('Angular velocity Z')
 title('Angular Velocity (Z)')
 legend('Z')
 
-%% ===================== Prepare Angular Velocity Data =====================
+
+
+% Prepare Angular Velocity Data
 t = datetime(AngularVelocity.Timestamp);
 w = AngularVelocity.Z;
 
@@ -55,7 +60,9 @@ valid = ~isnan(w) & ~isnat(t);
 t = t(valid);
 w = w(valid);
 
-%% ===================== Detect 4 Largest Negative Spins =====================
+
+
+% Detect 4 Largest Negative Spins
 [~, sortedIdx] = sort(w, 'ascend');
 
 selectedIdx = [];
@@ -68,7 +75,7 @@ for i = 1:length(sortedIdx)
         selectedIdx(end+1) = candidate; %#ok<AGROW>
     end
 
-    if numel(selectedIdx) == 4
+    if numel(selectedIdx) == 23
         break
     end
 end
@@ -78,22 +85,30 @@ selectedIdx = sort(selectedIdx);
 eventTimes  = t(selectedIdx);
 eventValues = w(selectedIdx);
 
-%% ===================== Mark Events on Angular Velocity Plot =====================
+
+
+
+
+% Mark Events on Angular Velocity Plot
 figure(2)
 plot(eventTimes, eventValues, 'ko', ...
     'MarkerSize', 8, ...
     'MarkerFaceColor', 'w')
 
-legend('Z','4 negative-spin events')
+legend('Z','23 negative-spin events')
 
-%% ===================== Match Events to GPS Samples =====================
+
+
+
+
+% Match Events to GPS Samples
 tPos = datetime(Position.Timestamp);
 
-lat = zeros(4,1);
-lon = zeros(4,1);
-posIdx = zeros(4,1);
+lat = zeros(23,1);
+lon = zeros(23,1);
+posIdx = zeros(23,1);
 
-for k = 1:4
+for k = 1:23
     [~, idxClosest] = min(abs(tPos - eventTimes(k)));
 
     posIdx(k) = idxClosest;
@@ -101,7 +116,11 @@ for k = 1:4
     lon(k) = Position.longitude(idxClosest);
 end
 
-%% ===================== Display Results =====================
+
+
+
+
+% Display Results 
 result = table( ...
     selectedIdx(:), ...
     eventTimes(:), ...
@@ -114,7 +133,11 @@ result = table( ...
 disp("Detected spin events:")
 disp(result)
 
-%% ===================== Mark Events on GPS Map =====================
+
+
+
+
+% Mark Events on GPS Map 
 figure(1)
 geoplot(lat, lon, 'ro', ...
     'MarkerSize', 10, ...
