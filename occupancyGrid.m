@@ -10,3 +10,4 @@ show(map)
 % Check if a specific point is occupied
 xy = [3.5 3.5];
 isOccupied = checkOccupancy(map, xy) % Returns 1
+
