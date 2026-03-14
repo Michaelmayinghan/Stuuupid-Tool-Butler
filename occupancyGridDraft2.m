@@ -201,6 +201,47 @@ save('occupancyGrid.mat', 'occGrid', 'cellSize_m', 'cellSize_px', ...
      'metersPerPixel', 'nRows', 'nCols');
 
 
+%% SECTION: Interactive occupancy grid editing
+
+figure
+imagesc(occGrid)
+axis image
+colormap(gray)
+colorbar
+title('Click cells to toggle occupancy (Press ENTER when finished)')
+hold on
+
+while true
+    
+    [x,y] = ginput(1);
+
+    % ENTER pressed → stop editing
+    if isempty(x)
+        break
+    end
+
+    col = round(x);
+    row = round(y);
+
+    % check bounds
+    if row>=1 && row<=nRows && col>=1 && col<=nCols
+        
+        % toggle cell
+        occGrid(row,col) = 1 - occGrid(row,col);
+
+        % update the display
+        imagesc(occGrid)
+        axis image
+        colormap(gray)
+        drawnow
+        
+    end
+
+end
+
+
+
+
 
 
 
