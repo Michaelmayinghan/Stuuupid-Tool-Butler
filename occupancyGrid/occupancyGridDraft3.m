@@ -18,7 +18,7 @@ occPixel = imgGray < 0.5;
 
 %% Grid settings
 metersPerPixel = 0.36848;
-cellSize_m = 1;
+cellSize_m = 3;
 cellSize_px = cellSize_m / metersPerPixel;
 
 [imgH, imgW] = size(occPixel);

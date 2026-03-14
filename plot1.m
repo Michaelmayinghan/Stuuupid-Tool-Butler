@@ -1,5 +1,5 @@
 close
-clc % cannot clear
+clc
 
 plot(Position.longitude,Position.latitude);
 figure(2);
