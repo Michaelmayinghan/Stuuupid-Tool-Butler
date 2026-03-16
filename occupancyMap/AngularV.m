@@ -19,7 +19,7 @@
 % Clear workspace
 close all
 clc
-clear
+
 
 % Load data
 % load("sensorlog_20260302_124459Mila.mat");
