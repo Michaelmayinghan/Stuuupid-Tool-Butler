@@ -16,7 +16,7 @@ imgGray = im2double(imgGray);
 
 % Pixel-level occupancy
 % Black = occupied
-occPixel = imgGray > 0.5;
+occPixel = imgGray < 0.5;
 
 
 
@@ -56,13 +56,17 @@ for r = 1:nRows
 end
 
 
-
 % Show occupancy grid
 figure;
 imagesc(occGrid);
 axis image;
-colormap(gray);
+colormap(flipud(gray));   % flip so 1=black, 0=white
 title('Occupancy Grid Detected from Hand-Drawn Obstacles');
+
+hold on
+plot(nan,nan,'ks','MarkerFaceColor','k','DisplayName','Occupied (1)');
+plot(nan,nan,'ws','MarkerFaceColor','w','DisplayName','Free (0)');
+legend('Location','eastoutside')
 
 
 

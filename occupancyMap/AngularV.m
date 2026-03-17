@@ -17,7 +17,6 @@
 %% 
 
 % Clear workspace
-close all
 clc
 
 
@@ -26,14 +25,20 @@ clc
 load("newMapReadings.mat");
 
 % FIGURE 1: GPS Track
-
-% Plot GPS track
+figure(1)
 geoplot(Position.latitude, Position.longitude, 'b', 'LineWidth', 1.5)
-hold on
 geobasemap("streets")
 title('GPS Track (with 23 negative-spin events)')
+hold on
 
+% Mark Events on GPS Map 
+figure(1)
+hold on
+geoplot(lat, lon, 'ro', ...
+    'MarkerSize', 10, ...
+    'MarkerFaceColor', 'r')
 
+legend('Track','23 negative-spin events')
 
 
 % FIGURE 2: Angular Velocity (Z)
