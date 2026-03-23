@@ -31,16 +31,6 @@ geobasemap("streets")
 title('GPS Track (with 23 negative-spin events)')
 hold on
 
-% Mark Events on GPS Map 
-figure(1)
-hold on
-geoplot(lat, lon, 'ro', ...
-    'MarkerSize', 10, ...
-    'MarkerFaceColor', 'r')
-
-legend('Track','23 negative-spin events')
-
-
 % FIGURE 2: Angular Velocity (Z)
 t_all = datetime(AngularVelocity.Timestamp);
 
@@ -122,6 +112,14 @@ for k = 1:23
 end
 
 
+% Mark Events on GPS Map 
+figure(1)
+hold on
+geoplot(lat, lon, 'ro', ...
+    'MarkerSize', 10, ...
+    'MarkerFaceColor', 'r')
+
+legend('Track','23 negative-spin events')
 
 
 
@@ -137,9 +135,6 @@ result = table( ...
 
 disp("Detected spin events:")
 disp(result)
-
-
-
 
 
 % Mark Events on GPS Map 
