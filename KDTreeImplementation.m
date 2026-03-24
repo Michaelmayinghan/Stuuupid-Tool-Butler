@@ -1,22 +1,78 @@
-% KD Tree implementation
-clear; clc; 
-% represent split_axis by 0 and 1 where 0 = x, 1 = y
+allData = [keyP; sigP];
 
+latitudes = allData{:,1};
+longitudes = allData{:,2};
+labels = string(allData{:,3});
+
+% Create type labels
+types = [repmat("key", height(keyP), 1); ...
+         repmat("signal", height(sigP), 1)];
+
+%% =========================
+% BUILD KD TREE
+%% =========================
+graph = [];
 split_axis = 0;
 
-function [kdNode, split_axis] = createKdnode(xval, yval, split_axis)
-    kdNode = struct("split_axis",split_axis,"xvalue",xval,"yvalue",yval,"left",[], "right", []);
+for i = 1:length(latitudes)
+    lat = latitudes(i);
+    lon = longitudes(i);
+
+    [kdNode, split_axis] = createKdnode(lon, lat, labels(i), types(i), split_axis);
+    graph = insertKdnode(graph, kdNode);
+end
+
+%% =========================
+% PLOT TREE STRUCTURE
+%% =========================
+figure('Color','k');
+plotKdTree(graph);
+title('KD-Tree Structure');
+
+%% =========================
+% PLOT KD SPACE (REAL COORDS)
+%% =========================
+xmin = min(longitudes);
+xmax = max(longitudes);
+ymin = min(latitudes);
+ymax = max(latitudes);
+
+figure; hold on; axis equal;
+plotKdSpace(graph, xmin, xmax, ymin, ymax);
+title('KD-Tree Spatial Partitioning');
+
+% Legend
+plot(nan,nan,'ro','MarkerFaceColor','r');
+plot(nan,nan,'go','MarkerFaceColor','g');
+legend('Key Points','Signal Points');
+
+
+%% =========================================================
+% FUNCTIONS
+%% =========================================================
+
+function [kdNode, split_axis] = createKdnode(xval, yval, label, type, split_axis)
+    kdNode = struct( ...
+        "split_axis", split_axis, ...
+        "xvalue", xval, ...
+        "yvalue", yval, ...
+        "label", label, ...
+        "type", type, ...
+        "left", [], ...
+        "right", []);
+    
     split_axis = ~split_axis;
 end
 
+
 function graph = insertKdnode(graph, kdNode)
     if isempty(graph)
-        graph = kdNode; 
+        graph = kdNode;
         return;
     end
     
-    split_axis = kdNode.split_axis;
-    
+    split_axis = graph.split_axis;
+
     if split_axis == 0
         if kdNode.xvalue < graph.xvalue
             graph.left = insertKdnode(graph.left, kdNode);
@@ -32,19 +88,35 @@ function graph = insertKdnode(graph, kdNode)
     end
 end
 
+
 function plotKdTree(root)
-    clf; 
+    clf;
     hold on;
-    axis equal off;
+    axis off;
+    set(gca,'Color','k');
+
     if isempty(root)
         return;
     end
+
     plotNode(root, 0, 0, 10);
 end
 
+
 function plotNode(node, x, y, dx)
-    plot(x,y,'wo', 'MarkerFaceColor','y');
-    text(x+0.3,y,sprintf('(%d,%d)',node.xvalue, node.yvalue));
+
+    % Color based on type
+    if node.type == "key"
+        color = 'r';
+    else
+        color = 'g';
+    end
+
+    plot(x, y, 'o', 'MarkerFaceColor', color, 'MarkerEdgeColor','w');
+
+    text(x+0.3, y, sprintf('%s\n(%.5f, %.5f)', ...
+        node.label, node.xvalue, node.yvalue), ...
+        'Color','w');
 
     if ~isempty(node.left)
         xL = x - dx;
@@ -62,20 +134,6 @@ function plotNode(node, x, y, dx)
 end
 
 
-points = [3 6; 17 15; 13 15; 6 12; 9 1; 2 7; 10 19];
-graph = [];
-
-for i = 1:size(points,1)
-    xval = points(i, 1);
-    yval = points(i, 2);
-
-    [kdNode, split_axis] = createKdnode(xval, yval, split_axis);
-    graph = insertKdnode(graph, kdNode);
-end
-
-plotKdTree(graph);
-
-
 function plotKdSpace(node, xmin, xmax, ymin, ymax)
     if isempty(node)
         return;
@@ -83,25 +141,29 @@ function plotKdSpace(node, xmin, xmax, ymin, ymax)
 
     hold on;
 
+    % Choose color based on type
+    if node.type == "key"
+        pointColor = 'r';
+    else
+        pointColor = 'g';
+    end
+
     if node.split_axis == 0
-        % split on x
+        % Vertical split
         x = node.xvalue;
         plot([x x], [ymin ymax], 'r-', 'LineWidth', 1.5);
-        plot(x, node.yvalue, 'wo', 'MarkerFaceColor','y');
+        plot(x, node.yvalue, 'o', 'MarkerFaceColor', pointColor, 'MarkerEdgeColor','k');
 
         plotKdSpace(node.left, xmin, x, ymin, ymax);
         plotKdSpace(node.right, x, xmax, ymin, ymax);
+
     else
-        % split on y
+        % Horizontal split
         y = node.yvalue;
         plot([xmin xmax], [y y], 'b-', 'LineWidth', 1.5);
-        plot(node.xvalue, y, 'wo', 'MarkerFaceColor','y');
+        plot(node.xvalue, y, 'o', 'MarkerFaceColor', pointColor, 'MarkerEdgeColor','k');
 
         plotKdSpace(node.left, xmin, xmax, ymin, y);
         plotKdSpace(node.right, xmin, xmax, y, ymax);
     end
 end
-
-figure; hold on; axis equal;
-plotKdSpace(graph, 0, 20, 0, 20);
-legend('x-axis','points', 'y-axis');

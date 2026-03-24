@@ -1,7 +1,7 @@
 
 clc
 
-% disp(result)
+%disp(result)
 
 remark = [
     "Marshgate"

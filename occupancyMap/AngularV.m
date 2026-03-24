@@ -17,7 +17,9 @@
 %% 
 
 % Clear workspace
+clear
 clc
+close all
 
 
 % Load data
