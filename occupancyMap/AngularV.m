@@ -69,7 +69,7 @@ for i = 1:length(sortedIdx)
     candidate = sortedIdx(i);
 
     if isempty(selectedIdx) || all(abs(candidate - selectedIdx) > minSeparation)
-        selectedIdx(end+1) = candidate; %#ok<AGROW>
+        selectedIdx(end+1) = candidate; 
     end
 
     if numel(selectedIdx) == 23
