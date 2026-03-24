@@ -45,6 +45,3 @@ printList(keyList, keyHead);
 
 disp("Signal Points:");
 printList(sigList, sigHead);
-
-
-%% Graphs
