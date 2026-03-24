@@ -17,7 +17,6 @@
 %% 
 
 % Clear workspace
-clear
 clc
 close all
 

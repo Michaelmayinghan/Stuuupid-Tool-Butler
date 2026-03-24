@@ -18,11 +18,6 @@ goalName  = "OPS";
 startNode = findNodeByName(nodes, startName);
 goalNode  = findNodeByName(nodes, goalName);
 
-% Make sure both are from keyP
-if startNode > nodes.nKey || goalNode > nodes.nKey
-    error('Start and goal must both be key points from keyP.');
-end
-
 % BFS
 [path_bfs, steps_bfs] = bfsShortestPath(L_bfs, startNode, goalNode);
 
