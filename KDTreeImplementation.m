@@ -37,7 +37,7 @@ title('KD-Tree Spatial Partitioning');
 
 plot(nan,nan,'ro','MarkerFaceColor','r');
 plot(nan,nan,'go','MarkerFaceColor','g');
-legend('Key Points','Signal Points');
+legend('x','Key Points','y','','','','','Signal Points');
 
 
 function [kdNode, split_axis] = createKdnode(xval, yval, label, type, split_axis)
