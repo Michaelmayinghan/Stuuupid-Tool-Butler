@@ -20,7 +20,7 @@ The navigation intent extraction requires a local LLM service to be running.
 
 ```bash
 ollama run qwen2.5
-
+```
 Keep it Running: Ensure the terminal window remains open while running the MATLAB script.
 
 3. Algorithm Analysis & Performance
