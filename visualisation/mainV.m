@@ -1,7 +1,7 @@
 close all;
 clc;
 
-basePath = '/Users/shanyuanluo/Documents/MATLAB/Year1/Term2/DSA/Stuuupid-Tool-Butler';
+basePath = 'C:\Users\naert\Stuuupid-Tool-Butler';
 addpath(basePath);
 addpath(fullfile(basePath, 'occupancyMap'));
 addpath(fullfile(basePath, 'visualisation'));
