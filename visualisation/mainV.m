@@ -1,7 +1,9 @@
 close all;
 clc;
 
-basePath = '/Users/shanyuanluo/Documents/MATLAB/Year1/Term2/DSA/Stuuupid-Tool-Butler';
+% Go to repo root (Stuuupid-Tool-Butler)
+basePath = fileparts(fileparts(mfilename('fullpath')));
+
 addpath(basePath);
 addpath(fullfile(basePath, 'occupancyMap'));
 addpath(fullfile(basePath, 'visualisation'));
