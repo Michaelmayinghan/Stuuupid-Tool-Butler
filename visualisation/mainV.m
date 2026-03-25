@@ -102,7 +102,7 @@ set(h3, 'DisplayName', 'Goal to waiting');
 animateRobotIcon(ax, fullRouteRC, 'igor.jpeg', 0.05);
 
 % Final message
-fprintf('\nSafely arrived from %s to %s.\n', nodes.names{startNode}, nodes.names{goalNode});
+fprintf('\nSafely arrived from %s to %s\n', nodes.names{startNode}, nodes.names{goalNode});
 fprintf('Robot returned to waiting point: %s\n', nodes.names{nearestWaitNode});
 
 

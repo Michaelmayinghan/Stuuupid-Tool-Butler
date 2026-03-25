@@ -6,8 +6,9 @@ hold(ax, 'on');
 
 imagesc(ax, occGrid);
 axis(ax, 'image');
-set(ax, 'XDir', 'normal');
-set(ax, 'YDir', 'normal');
+
+set(ax, 'XDir', 'normal');    % left to right is normal
+set(ax, 'YDir', 'reverse');   % vertical flip
 
 colormap(ax, [1 1 1; 0 0.6 0]);   % free = white, occupied = green
 caxis(ax, [0 1]);
