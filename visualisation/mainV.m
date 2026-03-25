@@ -16,10 +16,10 @@ run('extractedPoints.m');
 load('occupancyGrid.mat', 'occGrid', 'cellSize_m', 'nRows', 'nCols');
 
 % calibration bounds for the image
-mapRef.latTop    = 51.5415;
-mapRef.latBottom = 51.5370;
-mapRef.lonLeft   = -0.0160;
-mapRef.lonRight  = -0.0095;
+mapRef.latTop    = (51.5413023377624 + 51.54128358792175) / 2;
+mapRef.latBottom = (51.53637540808553 + 51.53637740926019) / 2;
+mapRef.lonLeft   = (-0.02113822581864861 + -0.021159663821911742) / 2;
+mapRef.lonRight  = (-0.0053338668458112635 + -0.00531892350591541) / 2;
 
 % Build node structure
 nodes = createNodesFromTables(keyP, sigP);
@@ -38,77 +38,140 @@ currentNode = waitingIdx(randi(numel(waitingIdx)));
 fprintf('Robot is initially waiting at: %s\n', nodes.names{currentNode});
 fprintf('Available waiting points: %s\n\n', strjoin(waitingNames, ", "));
 
-% Ask for user input
-fprintf('Available ALL points (key + signal):\n');
-for i = 1:nodes.nTotal
-    fprintf('%2d : %s\n', i, nodes.names{i});
+missionActive = true;
+firstMission = true;
+
+while missionActive
+
+    fprintf('Available ALL points (key + signal):\n');
+    for i = 1:nodes.nTotal
+        fprintf('%2d : %s\n', i, nodes.names{i});
+    end
+    fprintf('\n');
+
+    if firstMission
+    validStart = false;
+    while ~validStart
+        startInput = strtrim(input('Enter START point name or number: ', 's'));
+        startNode = parsePointInput(nodes, startInput);
+
+        if ~isempty(startNode)
+            validStart = true;
+        else
+            fprintf('Invalid START point. Please enter a valid point name or number from the list above.\n');
+        end
+    end
+    else
+    startNode = currentNode;
+    fprintf('Continuing from current location: %s\n', nodes.names{startNode});
+    end
+
+    validGoal = false;
+    while ~validGoal
+        if firstMission
+            goalPrompt = 'Enter GOAL point name or number: ';
+        else
+            goalPrompt = 'Enter NEXT DESTINATION point name or number: ';
+        end
+    
+        goalInput = strtrim(input(goalPrompt, 's'));
+        goalNode = parsePointInput(nodes, goalInput);
+    
+        if ~isempty(goalNode)
+            validGoal = true;
+        else
+            fprintf('Invalid destination point. Please enter a valid point name or number from the list above.\n');
+        end
+    end
+
+    if firstMission
+        [path_to_start_nodes, dist_to_start] = dijkstraShortestPath(L_dij, currentNode, startNode);
+    else
+        path_to_start_nodes = startNode;
+        dist_to_start = 0;
+    end
+
+    [path_to_goal_nodes, dist_to_goal] = dijkstraShortestPath(L_dij, startNode, goalNode);
+
+    fprintf('\n ROUTES \n');
+
+    if firstMission
+        fprintf('Waiting -> Start distance: %.2f m\n', dist_to_start);
+        disp(nodes.names(path_to_start_nodes));
+    end
+
+    fprintf('\nStart -> Goal distance: %.2f m\n', dist_to_goal);
+    disp(nodes.names(path_to_goal_nodes));
+
+    if firstMission
+        seg1 = buildDetailedRoute(path_to_start_nodes, nodes, mapRef, occGrid);
+    else
+        seg1 = [];
+    end
+
+    seg2 = buildDetailedRoute(path_to_goal_nodes, nodes, mapRef, occGrid);
+
+    if isempty(seg1)
+        fullRouteRC = seg2;
+    elseif isempty(seg2)
+        fullRouteRC = seg1;
+    else
+        fullRouteRC = [seg1; seg2(2:end,:)];
+    end
+
+    fig = figure('Name', 'Robot Navigation', 'Color', 'w');
+    ax = axes(fig);
+
+    plotOccupancyAndGraph(ax, occGrid, nodes, mapRef, L_dij, waitingIdx, currentNode, startNode, goalNode, []);
+
+    if firstMission
+        h1 = plotNodePath(ax, nodes, mapRef, occGrid, path_to_start_nodes, 'c-', 2.5);
+        set(h1, 'DisplayName', 'Waiting to start');
+    end
+
+    h2 = plotNodePath(ax, nodes, mapRef, occGrid, path_to_goal_nodes, 'r-', 3.0);
+    set(h2, 'DisplayName', 'Start to goal');
+
+    animateRobotIcon(ax, fullRouteRC, 'igor.jpeg', 0.05);
+
+    fprintf('\nSafely arrived from %s to %s\n', nodes.names{startNode}, nodes.names{goalNode});
+
+    currentNode = goalNode;
+    firstMission = false;
+
+    validReply = false;
+    while ~validReply
+        reply = upper(strtrim(input('Any other need for help? Key in YES or NO: ', 's')));
+
+        if strcmp(reply, 'YES')
+            fprintf('\nPlease enter the next destination.\n\n');
+            validReply = true;
+
+        elseif strcmp(reply, 'NO')
+            nearestWaitNode = nearestWaitingPoint(L_dij, waitingIdx, currentNode);
+            [path_to_wait_nodes, dist_to_wait] = dijkstraShortestPath(L_dij, currentNode, nearestWaitNode);
+
+            fprintf('\nGoal -> Nearest Waiting distance: %.2f m\n', dist_to_wait);
+            disp(nodes.names(path_to_wait_nodes));
+
+            seg3 = buildDetailedRoute(path_to_wait_nodes, nodes, mapRef, occGrid);
+
+            fig2 = figure('Name', 'Return to Waiting Point', 'Color', 'w');
+            ax2 = axes(fig2);
+            plotOccupancyAndGraph(ax2, occGrid, nodes, mapRef, L_dij, waitingIdx, currentNode, currentNode, currentNode, nearestWaitNode);
+
+            h3 = plotNodePath(ax2, nodes, mapRef, occGrid, path_to_wait_nodes, 'm-', 2.5);
+            set(h3, 'DisplayName', 'Goal to waiting');
+
+            animateRobotIcon(ax2, seg3, 'igor.jpeg', 0.05);
+
+            fprintf('Robot returned to waiting point: %s\n', nodes.names{nearestWaitNode});
+
+            missionActive = false;
+            validReply = true;
+
+        else
+            fprintf('Invalid input. Please enter YES or NO.\n');
+        end
+    end
 end
-fprintf('\n');
-
-startName = input('Enter START point name: ', 's');
-goalName  = input('Enter GOAL point name: ', 's');
-
-startNode = findNodeByName(nodes, startName);
-goalNode  = findNodeByName(nodes, goalName);
-
-
-
-% 1) Go from current waiting point to chosen START point
-[path_to_start_nodes, dist_to_start] = dijkstraShortestPath(L_dij, currentNode, startNode);
-
-% 2) Go from START point to GOAL point
-[path_to_goal_nodes, dist_to_goal] = dijkstraShortestPath(L_dij, startNode, goalNode);
-
-% 3) After arrival, go to nearest waiting point
-nearestWaitNode = nearestWaitingPoint(L_dij, waitingIdx, goalNode);
-[path_to_wait_nodes, dist_to_wait] = dijkstraShortestPath(L_dij, goalNode, nearestWaitNode);
-
-fprintf('\n===== ROUTES =====\n');
-fprintf('Waiting -> Start distance: %.2f m\n', dist_to_start);
-disp(nodes.names(path_to_start_nodes));
-
-fprintf('\nStart -> Goal distance: %.2f m\n', dist_to_goal);
-disp(nodes.names(path_to_goal_nodes));
-
-fprintf('\nGoal -> Nearest Waiting distance: %.2f m\n', dist_to_wait);
-disp(nodes.names(path_to_wait_nodes));
-
-% Build detailed obstacle-free route on occupancy grid
-fullRouteRC = [];
-
-seg1 = buildDetailedRoute(path_to_start_nodes, nodes, mapRef, occGrid);
-seg2 = buildDetailedRoute(path_to_goal_nodes, nodes, mapRef, occGrid);
-seg3 = buildDetailedRoute(path_to_wait_nodes, nodes, mapRef, occGrid);
-
-% Concatenate carefully to avoid duplicate rows
-fullRouteRC = concatenateRoutes(seg1, seg2, seg3);
-
-% Visualize map, graph, and animate robot
-fig = figure('Name', 'Robot Navigation', 'Color', 'w');
-ax = axes(fig);
-plotOccupancyAndGraph(ax, occGrid, nodes, mapRef, L_dij, waitingIdx, currentNode, startNode, goalNode, nearestWaitNode);
-
-% Highlight node-level Dijkstra routes
-h1 = plotNodePath(ax, nodes, mapRef, occGrid, path_to_start_nodes, 'c-', 2.5);
-h2 = plotNodePath(ax, nodes, mapRef, occGrid, path_to_goal_nodes, 'r-', 3.0);
-h3 = plotNodePath(ax, nodes, mapRef, occGrid, path_to_wait_nodes, 'm-', 2.5);
-
-set(h1, 'DisplayName', 'Waiting to start');
-set(h2, 'DisplayName', 'Start to goal');
-set(h3, 'DisplayName', 'Goal to waiting');
-
-
-% Animate robot icon on detailed occupancy-grid route
-animateRobotIcon(ax, fullRouteRC, 'igor.jpeg', 0.05);
-
-% Final message
-fprintf('\nSafely arrived from %s to %s\n', nodes.names{startNode}, nodes.names{goalNode});
-fprintf('Robot returned to waiting point: %s\n', nodes.names{nearestWaitNode});
-
-
-
-
-
-
-
-
