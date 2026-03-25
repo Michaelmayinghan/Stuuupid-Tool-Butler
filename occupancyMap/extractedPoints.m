@@ -32,7 +32,7 @@ remark = [
 allP = table(result.Latitude, result.Longitude, remark, ...
     'VariableNames', {'Latitude', 'Longitude', 'Remark'});
 
-disp(allP);
+% disp(allP);
 
 %% distinguish between key points and signal points
 
@@ -49,11 +49,11 @@ sigIdx = setdiff(allIdx, keyIdx);
 % extract signal points
 sigP = allP(sigIdx, :);
 
-disp("Key Points:")
-disp(keyP)
-
-disp("Signal Points:")
-disp(sigP)
+% disp("Key Points:")
+% disp(keyP)
+% 
+% disp("Signal Points:")
+% disp(sigP)
 
 
 %% Key Points
@@ -147,36 +147,36 @@ sigP.Remark = [
 ];
 
 
-%% Plot and show
-
-figure;
-
-% Signal Points - green
-geoscatter(sigP.Latitude, sigP.Longitude, 40, 'g', 'filled');
-hold on;
-
-for i = 1:height(sigP)
-    text(sigP.Latitude(i), sigP.Longitude(i), ...
-        " " + sigP.Remark(i), ...
-        'Color','g', ...
-        'FontSize',8);
-end
-
-% Key Points - red
-geoscatter(keyP.Latitude, keyP.Longitude, 70, 'r', 'filled');
-
-for i = 1:height(keyP)
-    text(keyP.Latitude(i), keyP.Longitude(i), ...
-        " " + keyP.Remark(i), ...
-        'Color','r', ...
-        'FontSize',9, ...
-        'FontWeight','bold');
-end
-
-legend('Signal Points','Key Points','Location','best');
-title('Key Points and Signal Points with Labels');
-
-geobasemap streets
+% %% Plot and show
+% 
+% figure;
+% 
+% % Signal Points - green
+% geoscatter(sigP.Latitude, sigP.Longitude, 40, 'g', 'filled');
+% hold on;
+% 
+% for i = 1:height(sigP)
+%     text(sigP.Latitude(i), sigP.Longitude(i), ...
+%         " " + sigP.Remark(i), ...
+%         'Color','g', ...
+%         'FontSize',8);
+% end
+% 
+% % Key Points - red
+% geoscatter(keyP.Latitude, keyP.Longitude, 70, 'r', 'filled');
+% 
+% for i = 1:height(keyP)
+%     text(keyP.Latitude(i), keyP.Longitude(i), ...
+%         " " + keyP.Remark(i), ...
+%         'Color','r', ...
+%         'FontSize',9, ...
+%         'FontWeight','bold');
+% end
+% 
+% legend('Signal Points','Key Points','Location','best');
+% title('Key Points and Signal Points with Labels');
+% 
+% geobasemap streets
 
 
 

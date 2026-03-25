@@ -35,24 +35,24 @@ waitingNames = string(nodes.names(waitingIdx));
 rng('shuffle');
 currentNode = waitingIdx(randi(numel(waitingIdx)));
 
-fprintf('Robot is initially waiting at: %s\n', nodes.names{currentNode});
-fprintf('Available waiting points: %s\n\n', strjoin(waitingNames, ", "));
+fprintf('IGOR is currently waiting for you at: %s\n', nodes.names{currentNode});
+fprintf('(All WAITING points: %s)\n\n', strjoin(waitingNames, ", "));
 
 missionActive = true;
 firstMission = true;
 
 while missionActive
 
-    fprintf('Available ALL points (key + signal):\n');
+    fprintf('All available points:\n');
     for i = 1:nodes.nTotal
-        fprintf('%2d : %s\n', i, nodes.names{i});
+        fprintf('%2d: %s\n', i, nodes.names{i});
     end
     fprintf('\n');
 
     if firstMission
     validStart = false;
     while ~validStart
-        startInput = strtrim(input('Enter START point name or number: ', 's'));
+        startInput = strtrim(input('Enter your START point name or number: ', 's'));
         startNode = parsePointInput(nodes, startInput);
 
         if ~isempty(startNode)
@@ -63,15 +63,15 @@ while missionActive
     end
     else
     startNode = currentNode;
-    fprintf('Continuing from current location: %s\n', nodes.names{startNode});
+    fprintf('Continuing from the current location: %s\n', nodes.names{startNode});
     end
 
     validGoal = false;
     while ~validGoal
         if firstMission
-            goalPrompt = 'Enter GOAL point name or number: ';
+            goalPrompt = 'Enter your DESTINATION name or number: ';
         else
-            goalPrompt = 'Enter NEXT DESTINATION point name or number: ';
+            goalPrompt = 'Enter your NEXT DESTINATION name or number: ';
         end
     
         goalInput = strtrim(input(goalPrompt, 's'));
@@ -80,7 +80,7 @@ while missionActive
         if ~isempty(goalNode)
             validGoal = true;
         else
-            fprintf('Invalid destination point. Please enter a valid point name or number from the list above.\n');
+            fprintf('Invalid DESTINATION point. Please enter a valid point name or number from the list above.\n');
         end
     end
 
@@ -96,11 +96,11 @@ while missionActive
     fprintf('\nROUTES: \n');
 
     if firstMission
-        fprintf('Waiting -> Start distance: %.2f m\n', dist_to_start);
+        fprintf('Waiting point -> Starting point distance: %.2f m\n', dist_to_start);
         disp(nodes.names(path_to_start_nodes));
     end
 
-    fprintf('Start -> Goal distance: %.2f m\n', dist_to_goal);
+    fprintf('Starting point -> Destination distance: %.2f m\n', dist_to_goal);
     disp(nodes.names(path_to_goal_nodes));
 
     if firstMission
@@ -126,11 +126,11 @@ while missionActive
 
     if firstMission
         h1 = plotNodePath(ax, nodes, mapRef, occGrid, path_to_start_nodes, 'c-', 2.5);
-        set(h1, 'DisplayName', 'Waiting to start');
+        set(h1, 'DisplayName', 'Waiting Point to Starting Point');
     end
 
     h2 = plotNodePath(ax, nodes, mapRef, occGrid, path_to_goal_nodes, 'r-', 3.0);
-    set(h2, 'DisplayName', 'Start to goal');
+    set(h2, 'DisplayName', 'Starting Point to Destination');
 
     animateRobotIcon(ax, fullRouteRC, 'igor.jpeg', 0.05);
 
@@ -141,31 +141,31 @@ while missionActive
 
     validReply = false;
     while ~validReply
-        reply = upper(strtrim(input('Any other need for help? Key in YES or NO: ', 's')));
+        reply = upper(strtrim(input('Any other need for help? Key in YES or NO to tell IGOR the GOAT: ', 's')));
 
         if ((strcmp(reply, 'YES'))||(strcmp(reply, 'yes')))
-            fprintf('\nPlease enter the next destination.\n\n');
+            fprintf('\nPlease enter your next DESTINATION.\n\n');
             validReply = true;
 
         elseif ((strcmp(reply, 'NO'))||(strcmp(reply, 'no')))
             nearestWaitNode = nearestWaitingPoint(L_dij, waitingIdx, currentNode);
             [path_to_wait_nodes, dist_to_wait] = dijkstraShortestPath(L_dij, currentNode, nearestWaitNode);
 
-            fprintf('\nGoal -> Nearest Waiting distance: %.2f m\n', dist_to_wait);
+            fprintf('\nDestination -> Nearest waiting point distance: %.2f m\n', dist_to_wait);
             disp(nodes.names(path_to_wait_nodes));
 
             seg3 = buildDetailedRoute(path_to_wait_nodes, nodes, mapRef, occGrid);
 
-            fig2 = figure('Name', 'Return to Waiting Point', 'Color', 'w');
+            fig2 = figure('Name', 'Return to waiting point', 'Color', 'w');
             ax2 = axes(fig2);
             plotOccupancyAndGraph(ax2, occGrid, nodes, mapRef, L_dij, waitingIdx, currentNode, currentNode, currentNode, nearestWaitNode);
 
             h3 = plotNodePath(ax2, nodes, mapRef, occGrid, path_to_wait_nodes, 'm-', 2.5);
-            set(h3, 'DisplayName', 'Goal to waiting');
+            set(h3, 'DisplayName', 'Destination to Waiting Point');
 
             animateRobotIcon(ax2, seg3, 'igor.jpeg', 0.05);
 
-            fprintf('Robot returned to waiting point: %s\n', nodes.names{nearestWaitNode});
+            fprintf('IGOR returned to waiting point: %s, Please say THANK YOU!\n', nodes.names{nearestWaitNode});
 
             missionActive = false;
             validReply = true;

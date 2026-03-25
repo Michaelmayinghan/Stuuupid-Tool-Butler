@@ -1,49 +1,29 @@
-%% Notes
-
-% Dynamic environments!!
-% 
-% Real environments change.
-%     pedestrians
-%     temporary barriers
-%     traffic
-% 
-% Robot must:
-%     update graph, recompute path
-% 
-% Example:
-%     edge removed → recompute Dijkstra
-% 
-
-%% 
-
-% Clear workspace
 clc
 close all
 
 
 % Load data
-% load("sensorlog_20260302_124459Mila.mat");
 load("newMapReadings.mat");
 
-% FIGURE 1: GPS Track
-figure(1)
-geoplot(Position.latitude, Position.longitude, 'b', 'LineWidth', 1.5)
-geobasemap("streets")
-title('GPS Track (with 23 negative-spin events)')
-hold on
+% % FIGURE 1: GPS Track
+% figure(1)
+% geoplot(Position.latitude, Position.longitude, 'b', 'LineWidth', 1.5)
+% geobasemap("streets")
+% title('GPS Track (with 23 negative-spin events)')
+% hold on
 
 % FIGURE 2: Angular Velocity (Z)
 t_all = datetime(AngularVelocity.Timestamp);
 
-figure(2)
-plot(t_all, AngularVelocity.Z, 'r', 'LineWidth', 1)
-hold on
-grid on
-
-xlabel('Time')
-ylabel('Angular velocity Z')
-title('Angular Velocity (Z)')
-legend('Z')
+% figure(2)
+% plot(t_all, AngularVelocity.Z, 'r', 'LineWidth', 1)
+% hold on
+% grid on
+% 
+% xlabel('Time')
+% ylabel('Angular velocity Z')
+% title('Angular Velocity (Z)')
+% legend('Z')
 
 
 
@@ -85,15 +65,13 @@ eventValues = w(selectedIdx);
 
 
 
-% Mark Events on Angular Velocity Plot
-figure(2)
-plot(eventTimes, eventValues, 'ko', ...
-    'MarkerSize', 8, ...
-    'MarkerFaceColor', 'w')
-
-legend('Z','23 negative-spin events')
-
-
+% % Mark Events on Angular Velocity Plot
+% figure(2)
+% plot(eventTimes, eventValues, 'ko', ...
+%     'MarkerSize', 8, ...
+%     'MarkerFaceColor', 'w')
+% 
+% legend('Z','23 negative-spin events')
 
 
 
@@ -113,35 +91,42 @@ for k = 1:23
 end
 
 
-% Mark Events on GPS Map 
-figure(1)
-hold on
-geoplot(lat, lon, 'ro', ...
-    'MarkerSize', 10, ...
-    'MarkerFaceColor', 'r')
-
-legend('Track','23 negative-spin events')
-
-
-
-% Display Results 
-result = table( ...
-    selectedIdx(:), ...
-    eventTimes(:), ...
-    eventValues(:), ...
-    posIdx(:), ...
-    lat(:), ...
-    lon(:), ...
-    'VariableNames', {'AV_Index','AV_Time','OmegaZ','GPS_Index','Latitude','Longitude'});
-
-disp("Detected spin events:")
-disp(result)
+% % Mark Events on GPS Map 
+% figure(1)
+% hold on
+% geoplot(lat, lon, 'ro', ...
+%     'MarkerSize', 10, ...
+%     'MarkerFaceColor', 'r')
+% 
+% legend('Track','23 negative-spin events')
 
 
-% Mark Events on GPS Map 
-figure(1)
-geoplot(lat, lon, 'ro', ...
-    'MarkerSize', 10, ...
-    'MarkerFaceColor', 'r')
 
-legend('Track','4 negative-spin events')
+% % Display Results 
+% result = table( ...
+%     selectedIdx(:), ...
+%     eventTimes(:), ...
+%     eventValues(:), ...
+%     posIdx(:), ...
+%     lat(:), ...
+%     lon(:), ...
+%     'VariableNames', {'AV_Index','AV_Time','OmegaZ','GPS_Index','Latitude','Longitude'});
+% 
+% disp("Detected spin events:")
+% disp(result)
+% 
+% 
+% % Mark Events on GPS Map 
+% figure(1)
+% geoplot(lat, lon, 'ro', ...
+%     'MarkerSize', 10, ...
+%     'MarkerFaceColor', 'r')
+% 
+% legend('Track','4 negative-spin events')
+
+
+
+
+
+
+
