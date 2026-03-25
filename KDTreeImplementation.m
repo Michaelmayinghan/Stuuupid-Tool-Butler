@@ -8,9 +8,7 @@ labels = string(allData{:,3});
 types = [repmat("key", height(keyP), 1); ...
          repmat("signal", height(sigP), 1)];
 
-%% =========================
-% BUILD KD TREE
-%% =========================
+% build kd tree
 graph = [];
 split_axis = 0;
 
@@ -22,16 +20,12 @@ for i = 1:length(latitudes)
     graph = insertKdnode(graph, kdNode);
 end
 
-%% =========================
-% PLOT TREE STRUCTURE
-%% =========================
+% plot tree
 figure('Color','k');
 plotKdTree(graph);
 title('KD-Tree Structure');
 
-%% =========================
-% PLOT KD SPACE (REAL COORDS)
-%% =========================
+% plot kd space coordinates 
 xmin = min(longitudes);
 xmax = max(longitudes);
 ymin = min(latitudes);
@@ -41,15 +35,10 @@ figure; hold on; axis equal;
 plotKdSpace(graph, xmin, xmax, ymin, ymax);
 title('KD-Tree Spatial Partitioning');
 
-% Legend
 plot(nan,nan,'ro','MarkerFaceColor','r');
 plot(nan,nan,'go','MarkerFaceColor','g');
-legend('Key Points','Signal Points');
+legend('x','Key Points','y','','','','','Signal Points');
 
-
-%% =========================================================
-% FUNCTIONS
-%% =========================================================
 
 function [kdNode, split_axis] = createKdnode(xval, yval, label, type, split_axis)
     kdNode = struct( ...
