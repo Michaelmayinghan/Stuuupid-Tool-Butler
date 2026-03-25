@@ -21,7 +21,7 @@ while ~isempty(q)
         if ~visited(nb)
             visited(nb) = true;
             parent(nb) = current;
-            q(end+1) = nb; %#ok<AGROW>
+            q(end+1) = nb; 
         end
     end
 end
@@ -34,7 +34,7 @@ end
 
 path = goalNode;
 while path(1) ~= startNode
-    path = [parent(path(1)), path]; %#ok<AGROW>
+    path = [parent(path(1)), path];
 end
 
 numSteps = length(path) - 1;
