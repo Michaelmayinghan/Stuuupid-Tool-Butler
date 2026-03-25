@@ -1,4 +1,4 @@
-clear; clc; close all;
+clc; close all;
 
 run('AngularV.m');      
 run('extractedPoints.m'); 
