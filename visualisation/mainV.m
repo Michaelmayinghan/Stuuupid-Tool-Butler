@@ -93,14 +93,14 @@ while missionActive
 
     [path_to_goal_nodes, dist_to_goal] = dijkstraShortestPath(L_dij, startNode, goalNode);
 
-    fprintf('\n ROUTES \n');
+    fprintf('\nROUTES: \n');
 
     if firstMission
         fprintf('Waiting -> Start distance: %.2f m\n', dist_to_start);
         disp(nodes.names(path_to_start_nodes));
     end
 
-    fprintf('\nStart -> Goal distance: %.2f m\n', dist_to_goal);
+    fprintf('Start -> Goal distance: %.2f m\n', dist_to_goal);
     disp(nodes.names(path_to_goal_nodes));
 
     if firstMission
@@ -134,7 +134,7 @@ while missionActive
 
     animateRobotIcon(ax, fullRouteRC, 'igor.jpeg', 0.05);
 
-    fprintf('\nSafely arrived from %s to %s\n', nodes.names{startNode}, nodes.names{goalNode});
+    fprintf('Safely arrived from %s to %s\n', nodes.names{startNode}, nodes.names{goalNode});
 
     currentNode = goalNode;
     firstMission = false;
@@ -143,11 +143,11 @@ while missionActive
     while ~validReply
         reply = upper(strtrim(input('Any other need for help? Key in YES or NO: ', 's')));
 
-        if strcmp(reply, 'YES')
+        if ((strcmp(reply, 'YES'))||(strcmp(reply, 'yes')))
             fprintf('\nPlease enter the next destination.\n\n');
             validReply = true;
 
-        elseif strcmp(reply, 'NO')
+        elseif ((strcmp(reply, 'NO'))||(strcmp(reply, 'no')))
             nearestWaitNode = nearestWaitingPoint(L_dij, waitingIdx, currentNode);
             [path_to_wait_nodes, dist_to_wait] = dijkstraShortestPath(L_dij, currentNode, nearestWaitNode);
 
@@ -171,7 +171,16 @@ while missionActive
             validReply = true;
 
         else
-            fprintf('Invalid input. Please enter YES or NO.\n');
+            fprintf('Invalid input. Please enter YES or NO\n');
         end
     end
 end
+
+
+
+
+
+
+
+
+

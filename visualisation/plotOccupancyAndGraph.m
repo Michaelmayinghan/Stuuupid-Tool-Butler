@@ -13,30 +13,28 @@ set(ax, 'YDir', 'reverse');   % vertical flip
 colormap(ax, [1 1 1; 0 0.6 0]);   % free = white, occupied = green
 caxis(ax, [0 1]);
 
-title(ax, 'Occupancy Grid + Graph + Robot Route');
-xlabel(ax, 'Grid Column');
-ylabel(ax, 'Grid Row');
+title(ax, 'ROBOT GUIDE');
 
-% Plot all graph edges
-plotted = false(nodes.nTotal);
-
-for i = 1:length(L_dij)
-    neighbors = L_dij{i}(:,1);
-
-    [r1, c1] = latlonToGridRC(nodes.coords(i,1), nodes.coords(i,2), mapRef, occGrid);
-
-    for k = 1:length(neighbors)
-        j = neighbors(k);
-
-        if ~plotted(i,j)
-            [r2, c2] = latlonToGridRC(nodes.coords(j,1), nodes.coords(j,2), mapRef, occGrid);
-            plot(ax, [c1 c2], [r1 r2], 'Color', [0.5 0.5 0.5], 'LineWidth', 1.0, ...
-                'DisplayName', 'Graph edge');
-            plotted(i,j) = true;
-            plotted(j,i) = true;
-        end
-    end
-end
+% % Plot all graph edges
+% plotted = false(nodes.nTotal);
+% 
+% for i = 1:length(L_dij)
+%     neighbors = L_dij{i}(:,1);
+% 
+%     [r1, c1] = latlonToGridRC(nodes.coords(i,1), nodes.coords(i,2), mapRef, occGrid);
+% 
+%     for k = 1:length(neighbors)
+%         j = neighbors(k);
+% 
+%         if ~plotted(i,j)
+%             [r2, c2] = latlonToGridRC(nodes.coords(j,1), nodes.coords(j,2), mapRef, occGrid);
+%             plot(ax, [c1 c2], [r1 r2], 'Color', [0.5 0.5 0.5], 'LineWidth', 1.0, ...
+%                 'DisplayName', 'Graph edge');
+%             plotted(i,j) = true;
+%             plotted(j,i) = true;
+%         end
+%     end
+% end
 
 % Plot nodes
 for i = 1:nodes.nTotal
