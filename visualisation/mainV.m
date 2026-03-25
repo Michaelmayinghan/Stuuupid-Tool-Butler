@@ -1,7 +1,7 @@
 close all;
 clc;
 
-% Go to repo root (Stuuupid-Tool-Butler)
+% Go to repo root
 basePath = fileparts(fileparts(mfilename('fullpath')));
 
 addpath(basePath);
