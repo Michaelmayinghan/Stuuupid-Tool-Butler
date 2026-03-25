@@ -5,7 +5,7 @@ neighbors = {
     [10 17 8 1]  % 2 OrbitMid
     [13 14] %  3 AquaticsDoor
     [9]  % 4 IceCream
-    [15 9]  % 5 StadiumDoor
+    [15 9]  % 5 StadiumDoor 
     [16]  % 6 StadiumStore
     [12]  % 7 OPS
     [1 2 16 17]  % 8 Turn-MarshgateStadium

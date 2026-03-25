@@ -13,7 +13,7 @@ set(ax, 'YDir', 'reverse');   % vertical flip
 colormap(ax, [1 1 1; 0 0.6 0]);   % free = white, occupied = green
 caxis(ax, [0 1]);
 
-title(ax, 'ROBOT GUIDE');
+title(ax, 'IGOR GUIDE');
 
 % % Plot all graph edges
 % plotted = false(nodes.nTotal);
