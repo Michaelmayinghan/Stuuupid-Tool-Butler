@@ -1,4 +1,5 @@
-load('newMapReadings.mat');
+%load('newMapReadings.mat');
+load('sensorlog_20260326_122130.mat');
 
 % convert lat and lon to coordinates
 lat = deg2rad(Position.latitude);
@@ -81,3 +82,15 @@ title('v_z')
 legend('Raw','Filtered')
 grid on
 
+% cross-check using speed & course
+course = Position.course;
+speed = Position.speed;
+
+course_rad = deg2rad(course);
+
+vx_check = speed .* sin(course_rad);
+vy_check = speed .* cos(course_rad);
+
+figure;
+plot(t, vx, t, vx_check)
+legend('Computed vx','GPS vx')
