@@ -1,4 +1,4 @@
-function plotOccupancyAndGraph(ax, occGrid, nodes, mapRef, L_dij, waitingIdx, currentNode, startNode, goalNode, nearestWaitNode)
+function plotOccupancyAndGraph(ax, occGrid, nodes, mapRef, ~, waitingIdx, currentNode, startNode, goalNode, nearestWaitNode)
 
 axes(ax);
 cla(ax);

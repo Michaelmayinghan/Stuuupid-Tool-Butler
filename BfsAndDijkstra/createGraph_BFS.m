@@ -1,4 +1,4 @@
-function L = createGraph_BFS(nodes)
+function L = createGraph_BFS(~)
 
 % Node numbering after combining [keyP; sigP]:
 %
