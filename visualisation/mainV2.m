@@ -94,13 +94,13 @@ while missionActive
     end
 
     if firstMission
-        [path_to_start_nodes, dist_to_start] = dijkstraShortestPath(L_dij, currentNode, startNode);
+        [path_to_start_nodes, dist_to_start] = dijkstraPQ(L_dij, currentNode, startNode);
     else
         path_to_start_nodes = startNode;
         dist_to_start = 0;
     end
 
-    [path_to_goal_nodes, dist_to_goal] = dijkstraShortestPath(L_dij, startNode, goalNode);
+    [path_to_goal_nodes, dist_to_goal] = dijkstraPQ(L_dij, startNode, goalNode);
 
     fprintf('\nROUTES: \n');
 
@@ -171,7 +171,7 @@ while missionActive
 
         elseif strcmp(reply, 'NO')
             nearestWaitNode = nearestWaitingPoint(L_dij, waitingIdx, currentNode);
-            [path_to_wait_nodes, dist_to_wait] = dijkstraShortestPath(L_dij, currentNode, nearestWaitNode);
+            [path_to_wait_nodes, dist_to_wait] = dijkstraPQ(L_dij, currentNode, nearestWaitNode);
 
             fprintf('\nDestination -> Nearest waiting point distance: %.2f m\n', dist_to_wait);
             disp(nodes.names(path_to_wait_nodes));

@@ -1,5 +1,5 @@
-load('newMapReadings.mat');
-% load('sensorlog_20260326_122130.mat');
+% load('newMapReadings.mat');
+load('sensorlog_20260326_122130.mat');
 
 % convert lat and lon to coordinates
 lat = deg2rad(Position.latitude);
@@ -109,3 +109,32 @@ vy_check = speed .* cos(course_rad);
 figure;
 plot(t, vx, t, vx_check)
 legend('Computed vx','GPS vx')
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

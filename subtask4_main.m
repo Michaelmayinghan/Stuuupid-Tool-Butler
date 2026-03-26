@@ -1,4 +1,4 @@
-clear; clc; close all;
+clc
 
 load('sensorlog_20260326_122130.mat'); 
 
