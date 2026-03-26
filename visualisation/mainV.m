@@ -134,7 +134,7 @@ while missionActive
     h2 = plotNodePath(ax, nodes, mapRef, occGrid, path_to_goal_nodes, 'r-', 3.0);
     set(h2, 'DisplayName', 'Starting Point to Destination');
 
-    animateRobotIcon(ax, fullRouteRC, 'igor.jpeg', 0.05);
+    animateRobotIcon(ax, fullRouteRC, 'igor.jpeg', 0.04);
 
     fprintf('Safely arrived from %s to %s\n', nodes.names{startNode}, nodes.names{goalNode});
 
