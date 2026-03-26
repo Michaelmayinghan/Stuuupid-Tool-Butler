@@ -195,7 +195,7 @@ while missionActive
                 animateRobotIcon(ax2, seg3, fullfile(basePath, 'visualisation', 'igor.jpeg'), 0.05);
             end
 
-            fprintf('IGOR returned to waiting point: %s, Please say THANK YOU!\n', nodes.names{nearestWaitNode});
+            fprintf('IGOR returned to waiting point: %s, that is all folks, please say THANK YOU! You belong here!\n', nodes.names{nearestWaitNode});
 
             missionActive = false;
             validReply = true;
