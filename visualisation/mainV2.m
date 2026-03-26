@@ -37,7 +37,7 @@ waitingNames = string(nodes.names(waitingIdx));
 enableDynamicObstacles = true;
 nDynamicObstacles      = 6; % number of moving obstacles
 obstacleRadiusCells    = 1; % 1 means obstacle occupies a 3x3 neighbourhood
-framePause             = 0.15; % walking speed
+framePause             = 0.1; % walking speed
 replanPause            = 0.20; % short pause when replanning happens
 
 % Randomly choose initial waiting point
@@ -336,7 +336,7 @@ while true
     if routeIdx > size(routeRC,1)
         routeRC = astarGridPath(dynamicOcc, robotRC, goalRC);
         routeIdx = 2;
-        title(ax, 'IGOR GUIDE - Replanning route');
+        title(ax, 'IGOR GUIDE');
         drawnow;
         pause(replanPause);
         title(ax, 'IGOR GUIDE');
@@ -347,7 +347,7 @@ while true
     if dynamicOcc(nextRC(1), nextRC(2)) == 1
         routeRC = astarGridPath(dynamicOcc, robotRC, goalRC);
         routeIdx = 2;
-        title(ax, 'IGOR GUIDE - Dynamic obstacle detected, replanning');
+        title(ax, 'IGOR GUIDE');
         drawnow;
         pause(replanPause);
         title(ax, 'IGOR GUIDE');
