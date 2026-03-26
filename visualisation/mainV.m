@@ -134,7 +134,7 @@ while missionActive
     h2 = plotNodePath(ax, nodes, mapRef, occGrid, path_to_goal_nodes, 'r-', 3.0);
     set(h2, 'DisplayName', 'Starting Point to Destination');
 
-    animateRobotIcon(ax, fullRouteRC, 'igor.jpeg', 0.05);
+    animateRobotIcon(ax, fullRouteRC, 'igor.jpeg', 0.04);
 
     fprintf('Safely arrived from %s to %s\n', nodes.names{startNode}, nodes.names{goalNode});
 
@@ -145,11 +145,11 @@ while missionActive
     while ~validReply
         reply = upper(strtrim(input('Any other need for help? Key in YES or NO to tell IGOR the GOAT: ', 's')));
 
-        if ((strcmp(reply, 'YES'))||(strcmp(reply, 'yes')))
+        if (strcmpi(reply, 'YES'))
             fprintf('\nPlease enter your next DESTINATION.\n\n');
             validReply = true;
 
-        elseif ((strcmp(reply, 'NO'))||(strcmp(reply, 'no')))
+        elseif (strcmpi(reply, 'NO'))
             nearestWaitNode = nearestWaitingPoint(L_dij, waitingIdx, currentNode);
             [path_to_wait_nodes, dist_to_wait] = dijkstraShortestPath(L_dij, currentNode, nearestWaitNode);
 
