@@ -1,5 +1,5 @@
-%load('newMapReadings.mat');
-load('sensorlog_20260326_122130.mat');
+load('newMapReadings.mat');
+% load('sensorlog_20260326_122130.mat');
 
 % convert lat and lon to coordinates
 lat = deg2rad(Position.latitude);
@@ -32,21 +32,29 @@ figure;
 subplot(3,1,1)
 plot(t, vx)
 title('v_x')
+xlabel('Time (s)')
+ylabel('Velocity in x-direction (m/s)')
 grid on
 
 subplot(3,1,2)
 plot(t, vy)
 title('v_y')
+xlabel('Time (s)')
+ylabel('Velocity in y-direction (m/s)')
 grid on
 
 subplot(3,1,3)
 plot(t, vz)
 title('v_z')
+xlabel('Time (s)')
+ylabel('Velocity in z-direction (m/s)')
 grid on
 
 figure;
 plot(t, v)
 title('Total Velocity')
+xlabel('Time (s)')
+ylabel('Total Velocities (m/s)')
 grid on
 
 % Filtering
@@ -65,13 +73,18 @@ subplot(3,1,1)
 plot(t, vx, 'b'); hold on
 plot(t, vx_f, 'r', 'LineWidth', 1.5)
 title('v_x')
+xlabel('Time (s)')
+ylabel('Velocities in x-direction (m/s)')
 legend('Raw','Filtered')
 grid on
+
 
 subplot(3,1,2)
 plot(t, vy, 'b'); hold on
 plot(t, vy_f, 'r', 'LineWidth', 1.5)
 title('v_y')
+xlabel('Time (s)')
+ylabel('Velocities in y-direction (m/s)')
 legend('Raw','Filtered')
 grid on
 
@@ -79,6 +92,8 @@ subplot(3,1,3)
 plot(t, vz, 'b'); hold on
 plot(t, vz_f, 'r', 'LineWidth', 1.5)
 title('v_z')
+xlabel('Time (s)')
+ylabel('Velocities in z-direction (m/s)')
 legend('Raw','Filtered')
 grid on
 
