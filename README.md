@@ -1,4 +1,5 @@
 # Stuuupid-Tool-Butler
+For detailed algorithm analysis and results, please refer to the [Technical Report](./Y1T2_DSA_Project.pdf)
 🤖 The Robot Guide: Navigation & Motion Analysis
 This project is a comprehensive implementation of Spatial Data Structures and Pathfinding Algorithms designed for autonomous robot navigation. It also includes a signal processing pipeline to classify robot movement patterns based on sensor data.
 
